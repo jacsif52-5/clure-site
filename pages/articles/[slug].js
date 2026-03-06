@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import Link from 'next/link'
+import { PortableText } from '@portabletext/react'
 import client from '../../lib/sanity'
 import urlFor from '../../lib/imageUrl'
 import slugify from '../../lib/slugify'
@@ -33,6 +34,34 @@ function formatShortDate(dateStr) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
 }
 
+const portableTextComponents = {
+  block: {
+    h2: ({ children }) => <h2 className={styles.rtH2}>{children}</h2>,
+    h3: ({ children }) => <h3 className={styles.rtH3}>{children}</h3>,
+    h4: ({ children }) => <h4 className={styles.rtH4}>{children}</h4>,
+    blockquote: ({ children }) => <blockquote className={styles.rtBlockquote}>{children}</blockquote>,
+  },
+  marks: {
+    link: ({ value, children }) => {
+      const rel = value?.href?.startsWith('/') ? undefined : 'noopener noreferrer'
+      const target = value?.href?.startsWith('/') ? undefined : '_blank'
+      return (
+        <a href={value?.href} rel={rel} target={target}>
+          {children}
+        </a>
+      )
+    },
+  },
+  list: {
+    bullet: ({ children }) => <ul className={styles.rtUl}>{children}</ul>,
+    number: ({ children }) => <ol className={styles.rtOl}>{children}</ol>,
+  },
+  listItem: {
+    bullet: ({ children }) => <li>{children}</li>,
+    number: ({ children }) => <li>{children}</li>,
+  },
+}
+
 export async function getStaticPaths() {
   const slugs = await client.fetch(`*[_type == "article" && defined(slug.current)]{ "slug": slug.current }`)
   const paths = (slugs || []).map((s) => ({ params: { slug: s.slug } }))
@@ -60,10 +89,14 @@ export default function ArticlePage({ article, moreArticles = [] }) {
     ? urlFor(article.mainImage).width(1600).height(900).auto('format').url()
     : null
 
-  // Split plain-text body into paragraphs
-  const paragraphs = (article.body || '')
-    .split(/\n/)
-    .map((line, i) => <p key={i}>{line || '\u00A0'}</p>)
+  // Render body: supports Portable Text (array) and plain-text (string) fallback
+  const bodyContent = Array.isArray(article.body) ? (
+    <PortableText value={article.body} components={portableTextComponents} />
+  ) : (
+    (article.body || '')
+      .split(/\n/)
+      .map((line, i) => <p key={i}>{line || '\u00A0'}</p>)
+  )
 
   return (
     <>
@@ -127,7 +160,7 @@ export default function ArticlePage({ article, moreArticles = [] }) {
           {/* ── Article body ── */}
           <article className={styles.articleSection}>
             <div className={styles.articleContent}>
-              <div className={styles.richText}>{paragraphs}</div>
+              <div className={styles.richText}>{bodyContent}</div>
             </div>
           </article>
 
