@@ -192,6 +192,56 @@
   text-decoration: underline;
 }
 
+/* ─── Rich-text formatting ─── */
+.rtH2 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 1.3;
+  letter-spacing: -0.6px;
+  color: #ffffff;
+  margin: 32px 0 12px;
+}
+
+.rtH3 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 1.3;
+  letter-spacing: -0.5px;
+  color: #ffffff;
+  margin: 28px 0 10px;
+}
+
+.rtH4 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.3;
+  letter-spacing: -0.4px;
+  color: #ffffff;
+  margin: 24px 0 8px;
+}
+
+.rtBlockquote {
+  border-left: 3px solid rgba(255, 255, 255, 0.4);
+  padding-left: 20px;
+  margin: 24px 0;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.rtUl,
+.rtOl {
+  margin: 16px 0;
+  padding-left: 24px;
+}
+
+.rtUl li,
+.rtOl li {
+  margin-bottom: 6px;
+}
+
 /* ─── "Больше статей" section ─── */
 .moreSection {
   width: 100%;
@@ -360,6 +410,18 @@
 
   .richText {
     font-size: 16px;
+  }
+
+  .rtH2 {
+    font-size: 22px;
+  }
+
+  .rtH3 {
+    font-size: 19px;
+  }
+
+  .rtH4 {
+    font-size: 17px;
   }
 
   .moreSection {
