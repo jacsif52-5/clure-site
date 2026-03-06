@@ -43,10 +43,14 @@ const portableTextComponents = {
   },
   marks: {
     link: ({ value, children }) => {
-      const rel = value?.href?.startsWith('/') ? undefined : 'noopener noreferrer'
-      const target = value?.href?.startsWith('/') ? undefined : '_blank'
+      const href = value?.href
+      const isExternal = href && /^https?:\/\//.test(href)
       return (
-        <a href={value?.href} rel={rel} target={target}>
+        <a
+          href={href}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
+          target={isExternal ? '_blank' : undefined}
+        >
           {children}
         </a>
       )
